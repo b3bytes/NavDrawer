@@ -3,11 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Framelayout to display Fragments -->
-    <FrameLayout
-        android:id="@+id/frame_container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolBar"
+            layout="@layout/toolbar" />
+
+        <!-- Framelayout to display Fragments -->
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <!-- views to display slider menu -->
 
@@ -58,8 +68,8 @@
                 android:layout_alignStart="@+id/tvUserName"
                 android:layout_below="@+id/tvUserName"
                 android:layout_marginTop="2dp"
-                android:textColor="@android:color/black"
                 android:text="test@gmail.com"
+                android:textColor="@android:color/black"
                 android:textSize="12sp" />
         </RelativeLayout>
 

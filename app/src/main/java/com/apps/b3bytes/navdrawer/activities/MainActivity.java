@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +50,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolBar = (Toolbar) findViewById(R.id.toolBar);
+        //Toolbar will now take on default actionbar characteristics
+        setSupportActionBar(toolBar);
+        getSupportActionBar().setTitle("NavDrawer Appcompat Toolbar");
 
         mTitle = mDrawerTitle = getTitle();
 

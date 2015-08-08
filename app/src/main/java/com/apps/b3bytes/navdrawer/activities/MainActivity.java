@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.apps.b3bytes.navdrawer.R;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private LinearLayout llSliderMenu;
     private ActionBarDrawerToggle mDrawerToggle;
 
     // nav drawer title
@@ -59,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        llSliderMenu = (LinearLayout) findViewById(R.id.llSliderMenu);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
@@ -152,7 +155,7 @@ public class MainActivity extends ActionBarActivity {
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
             setTitle(navMenuTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(llSliderMenu);
         } else {
             // error in creating fragment
             Log.e("MainActivity", "Error in creating fragment");
@@ -186,7 +189,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(llSliderMenu);
         menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }

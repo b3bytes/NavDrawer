@@ -1,11 +1,15 @@
 package com.apps.b3bytes.navdrawer.activities;
 
+import android.content.ClipData;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -19,17 +23,18 @@ import android.widget.ListView;
 
 import com.apps.b3bytes.navdrawer.R;
 import com.apps.b3bytes.navdrawer.adapters.NavDrawerListAdapter;
+import com.apps.b3bytes.navdrawer.adapters.RVAdapter;
 import com.apps.b3bytes.navdrawer.fragments.FindPeopleFragment;
 import com.apps.b3bytes.navdrawer.fragments.HomeFragment;
 import com.apps.b3bytes.navdrawer.fragments.PhotosFragment;
 import com.apps.b3bytes.navdrawer.model.NavDrawerItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private LinearLayout llSliderMenu;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -43,8 +48,12 @@ public class MainActivity extends ActionBarActivity {
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
 
-    private ArrayList<NavDrawerItem> navDrawerItems;
-    private NavDrawerListAdapter adapter;
+    private List<NavDrawerItem> navDrawerItems;
+    private RVAdapter adapter;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +75,7 @@ public class MainActivity extends ActionBarActivity {
                 .obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_slidermenu);
         llSliderMenu = (LinearLayout) findViewById(R.id.llSliderMenu);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
@@ -83,9 +92,17 @@ public class MainActivity extends ActionBarActivity {
         navMenuIcons.recycle();
 
         // setting the nav drawer list adapter
-        adapter = new NavDrawerListAdapter(getApplicationContext(),
-                navDrawerItems);
-        mDrawerList.setAdapter(adapter);
+        adapter = new RVAdapter(navDrawerItems);
+        mRecyclerView.setAdapter(adapter);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        adapter.SetOnItemClickListener(new RVAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(NavDrawerItem item, int position) {
+                displayView(position);
+            }
+        });
 
         // enabling action bar app icon and behaving it as toggle button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -115,12 +132,20 @@ public class MainActivity extends ActionBarActivity {
             displayView(0);
         }
 
-        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+        //mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
     }
 
-    /**
+/*    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Intent detailIntent = new Intent(this, MainActivity.class);
+        NavDrawerItem item = adapter.getItem(position);
+        detailIntent.putExtra(MainActivity.ARG_ITEM, item);
+        startActivity(detailIntent);
+    }
+
+    *//**
      * Slide menu item click listener
-     */
+     *//*
     private class SlideMenuClickListener implements
             ListView.OnItemClickListener {
         @Override
@@ -129,7 +154,7 @@ public class MainActivity extends ActionBarActivity {
             // display view for selected nav drawer item
             displayView(position);
         }
-    }
+    }*/
 
     /**
      * Diplaying fragment view for selected nav drawer list item
@@ -158,8 +183,8 @@ public class MainActivity extends ActionBarActivity {
                     .replace(R.id.frame_container, fragment).commit();
 
             // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
+/*            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);*/
             setTitle(navMenuTitles[position]);
             mDrawerLayout.closeDrawer(llSliderMenu);
         } else {
